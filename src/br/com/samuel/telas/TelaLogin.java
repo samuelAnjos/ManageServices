@@ -1,33 +1,51 @@
-
 package br.com.samuel.telas;
+
 import java.sql.*;
-import br.com.samuel.dao.ModuloConexao;	
+import br.com.samuel.dao.ModuloConexao;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 // 2
+
 public class TelaLogin extends javax.swing.JFrame {
+
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    
+
     // metodo logar
-    public void logar(){
-       String sql = "select * from atbusuario where login=? and senha=?";
-       try {
-	    pst= conexao.prepareStatement(sql);
+    public void logar() {
+	String sql = "select * from atbusuario where login=? and senha=?";
+	try {
+	    pst = conexao.prepareStatement(sql);
 	    pst.setString(1, campo1.getText());
 	    pst.setString(2, campo2.getText());
-	    rs= pst.executeQuery();
-	    
-	    if(rs.next()){
-		TelaPrincipal telaprincipal = new TelaPrincipal();
-		telaprincipal.setVisible(true);
-		this.dispose(); // feche ao chamar a TelaPrincipal
+	    rs = pst.executeQuery();
+
+	    if (rs.next()) {
+		String perfil = rs.getString(6);
+		//System.out.println(perfil);
+		if (perfil.equals("adim")) {
+		    TelaPrincipal telaprincipal = new TelaPrincipal();
+		    telaprincipal.setVisible(true);
+		    TelaPrincipal.menuRelat.setEnabled(true);
+		    TelaPrincipal.cadUsu.setEnabled(true);
+		    TelaPrincipal.lblUsuario.setText(rs.getString(2));
+		    telaprincipal.lblUsuario.setForeground(Color.red);
+		    this.dispose();
+		}  else{
+		 TelaPrincipal telaprincipal = new TelaPrincipal();
+		    telaprincipal.setVisible(true);
+		    TelaPrincipal.lblUsuario.setText(rs.getString(2));
+		    
+		    this.dispose();
+		    
+		} 
 		conexao.close();
-	    }else{
+	    } else {
 		JOptionPane.showMessageDialog(null, "Senha e/ou Usuário inválido (s)");
 	    }
 	} catch (Exception e) {
-	   JOptionPane.showMessageDialog(null, e);
+	    JOptionPane.showMessageDialog(null, e);
 	}
     }
 
@@ -37,14 +55,13 @@ public class TelaLogin extends javax.swing.JFrame {
     public TelaLogin() {
 	initComponents();
 	conexao = ModuloConexao.conector();
-	if (conexao != null){
+	if (conexao != null) {
 	    loginSeCon.setText("Conectado");
-	}else{
+	} else {
 	    loginSeCon.setText("Desconectado");
 	}
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -115,12 +132,11 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       logar();
+	logar();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
     public static void main(String args[]) {
-	
+
 	java.awt.EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		new TelaLogin().setVisible(true);
