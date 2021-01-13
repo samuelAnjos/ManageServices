@@ -9,7 +9,7 @@ public class ModuloConexao {
        String driver = "com.mysql.jdbc.Driver";
        String url = "jdbc:mysql://localhost:3306/loja";
        String user = "root";
-       String password = "ovelhapreta";
+       String password = "x";
        
        try {
 	   Class.forName(driver);
